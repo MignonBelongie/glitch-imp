@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Whack an Imp</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+    
+    <!-- import the webpage's javascript file -->
+    <script src="/script.js" defer></script>
+    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v3.13.1/dist/aframe-extras.min.js"></script>
+<script>
+    $ = (sel) => document.querySelector(sel)
+    $$ = (sel) => document.querySelectorAll(sel)
+    on = (elem, type, hand) => elem.addEventListener(type,hand)
+  
+</script>
+  </head>  
+  <body>
+    <h1>Hi there! This is Mignon.</h1>
+    
+    <p>
+      I'm your cool new webpage. Made with <a href="https://glitch.com">Glitch</a>!
+    </p>
+
+    <!-- include the Glitch button to show what the webpage is about and
+          to make it easier for folks to view source and remix -->
+    <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
+    <script src="https://button.glitch.me/button.js"></script>
+    <a-scene stats physics="debug:true;">
+<a-assets>
+    <a-asset-item id="imp" src="assets2/scene.gltf"></a-asset-item>
+    <a-asset-item id="staff" src="staff/scene.gltf"></a-asset-item>
+    <a-asset-item id="donut" src="https://cdn.glitch.com/4b184d38-c0b6-4358-afcb-f0cdd738d608%2Fdonut.gltf?1538101620385"></a-asset-item>
+<!--
+    <a-asset-item id="donut" src="assets/donut.gltf"></a-asset-item>
+-->
+<!--
+-->
+<!--
+-->
+</a-assets>
+      <a-entity camera look-controls wasd-controls position="0 1.5 0">
+        <a-cursor></a-cursor>
+        <a-entity position="0 0 -4" rotation="300 0 0" id="weapon"
+                  static-body="shape: sphere; sphereRadius: 0.15;">
+            <a-entity gltf-model="#staff" position="0 -0.5 0"></a-entity>
+<!--
+            <a-box color="blue" width="0.25" height="0.5" depth="3" static-body ></a-box>
+-->
+<!--
+-->
+        </a-entity>
+        <a-text id="score" value="Score" position="-0.4 -0.5 -1" color="red" width="5" anchor="left"></a-text>
+      </a-entity>
+      <a-entity id="ball"
+          position="0 1 -4"
+          dynamic-body
+      >
+        <a-entity id="imp-model" gltf-model="#imp"></a-entity>
+<!--
+-->
+<!--
+-->
+      </a-entity>
+      <a-entity id="donut-model" gltf-model="#donut" position="1 1 -6"></a-entity>
+      <a-plane color="yellow" static-body rotation="-90 0 0" 
+         width="100" height="100"></a-plane>
+    </a-scene>
+<!--
+    <a-scene>
+      <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+      <a-sphere position="0 1.25 -5" radius="1.25" color="#C0C0C0"></a-sphere>
+      <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+      <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+      <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
+-->
+<!--
+-->
+    <script>
+let score = 0;
+let hit = false
+let resetId = 0
+const resetBall = () => {
+    clearTimeout(resetId)
+    $("#ball").body.position.set(0, 0.6,-4)
+    $("#ball").body.velocity.set(0, 5,0)
+    $("#ball").body.angularVelocity.set(0, 0,0)
+    hit = false
+    resetId = setTimeout(resetBall,6000)
+}
+on($("#weapon"),'collide',(e)=>{
+    const ball = $("#ball")
+    if(e.detail.body.id === ball.body.id && !hit) {
+        hit = true
+        score = score + 1
+        clearTimeout(resetId)
+        resetId = setTimeout(resetBall,2000)
+        $("#score").setAttribute('text','value','Score '+score)
+    }
+})
+
+setTimeout(resetBall,3000)
+</script>
+
+  </body>
+</html>
